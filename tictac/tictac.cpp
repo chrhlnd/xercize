@@ -1,11 +1,24 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-
-#include <stdlib.h>
-#include <time.h>
+#include <random>
+#include <functional>
 
 using namespace std;
+
+struct Rnd {
+
+	Rnd() : dist(0,1) {}
+
+	int Next() { return dist(eng); }
+
+private:
+
+	std::uniform_int_distribution<int> dist;
+	std::mt19937 eng;
+};
+
+Rnd sRnd;
 
 vector<char> board = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -190,7 +203,7 @@ int aiPick(int forPlayer, vector<int>& picks) {
 			pick = p;
 		} else {
 			if (val == low) {
-				if (rand() > (RAND_MAX/2)) {
+				if (sRnd.Next()) {
 					pick = p;
 				}
 			}
@@ -207,9 +220,8 @@ int pickPosition() {
 	return (input == 'n' || input == 'N') ? 0 : 1;
 }
 
-int main() {
-	srand(time(NULL));
 
+int main() {
 	bool done = false;
 	int round = 0;
 	int winner = -1;
